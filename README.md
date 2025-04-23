@@ -50,7 +50,7 @@ To get started with Bazarcom, follow these steps:
       Now build the images and run the application
 
    ```bash
-      docker compose up --build
+   docker compose up --build
    ```
    </li>
 </ol>
