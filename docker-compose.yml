@@ -1,26 +1,38 @@
-version: '3'
+version: "3"
 
 services:
   catalog_service:
-    build: .
+    build:
+      context: ./catalog
     ports:
       - "5000:5000"
     volumes:
-      - .:/app
-    command: python ./catalog/catalog.py
+      - ./catalog:/app
+    command: python catalog.py
 
   order_service:
-    build: .
+    build:
+      context: ./order
     ports:
       - "6000:6000"
     volumes:
-      - .:/app
-    command: python ./order/order.py
+      - ./order:/app
+    command: python order.py
 
   gateway_service:
-    build: .
+    build:
+      context: ./gateway
     ports:
       - "5050:5050"
     volumes:
-      - .:/app
-    command: python ./gateway/gateway.py
+      - ./gateway:/app
+    command: python gateway.py
+
+  frontend_service:
+    build:
+      context: ./frontend
+    ports:
+      - "6050:6050"
+    volumes:
+      - ./frontend:/app
+    command: python frontend.py
