@@ -1,6 +1,7 @@
-Flask >= 3.0.2
-Werkzeug >= 3.0.1
-Flask-SQLAlchemy >=3.0.0
+Python 3.11.3
+Flask 3.0.2
+Werkzeug 3.0.1
+Flask-SQLAlchemy==3.0.0
 Flask-Marshmallow==0.15.0
-marshmallow==3.13.0
+marshmallow==3.14.0
 requests==2.26.0
