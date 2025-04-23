@@ -42,104 +42,16 @@ To get started with Bazarcom, follow these steps:
          
    
    ```bash
-   pip install -r requirements.txt
-   ```
-   
-   <li>Uncomment the code for creating the database (from line 49 to 60):</li>
-         
-   ``` python
-   with app.app_context():
-       db.drop_all()
-       db.create_all()
-       book1 = Book(title='How to get a good grade in DOS in 40 minutes a day', topic="distributed_systems", price=10.99, quantity=100)
-       book2 = Book(title='RPCs for Noobs', topic="distributed_systems", price=15.00, quantity=50)
-       book3 = Book(title='Xen and the Art of Surviving Undergraduate School', topic="undergraduate_school", price=5.00, quantity=30)
-       book4 = Book(title='Cooking for the Impatient Undergrad', topic="undergraduate_school", price=10.00, quantity=70)
-       db.session.add(book1)
-       db.session.add(book2)
-       db.session.add(book3)
-       db.session.add(book4)
-       db.session.commit()
+   python penv book_store_env
+   source book_store_env/bin/activate
    ```
          
-   <li>Start the catalog server:</li>
-     
-   ```bash
-   python catalog/catalog.py
-   ```
-         
-   Now the catalog server running on `http://0.0.0.0:5000`
-         
-   * If you need to run it another time you sould comment the code for database (from line 49 to 60) because it will recreate the database with the initial data.
-   
-   <li>Uncomment the code for creating the database (from line 49 to 51):</li>
-   <li>Start the order server:</li>
-   
-   ``` bash
-   python order/order.py
-   ```
-         
-   Now the order server running on `http://0.0.0.0:6000`
-         
-   * If you need to run it another time you sould comment the code for database (from line 49 to 51) because it will recreate the database with the initial data.
-         
-   <li>Start the gateway server:</li>
-     
-   ```bash
-   python start gateway/gateway.py
-   ```
+   <li>
+      Now build the images and run the application
 
-   Now the order server running on `http://0.0.0.0:5050`
-      </ul>
-   </li>
-
-   <li> To run the project using docker to separate each service/server into separate docker container (Recomended):
-      <ul>
-         <li>Open powershell on your windows</li>
-         <li>Heads towards your project (copy the path from vscode) then enter this command on powershell:</li>
-        
-   ``` bash
-   cd 'path/to/project'
-   ```
-   
-   <li>Now we need to build images for each one of the servers(make sure that docker server is running on your device):</li>
-   
-   * Build catalog image
    ```bash
-   cd catalog
-   docker build -t catalog_service .
+      docker compose up --build
    ```
-   
-   * Build order image
-   ```bash
-   cd ..
-   cd order
-   docker build -t order_service .
-   ```
-   
-   * Build gateway image:
-   ```bash
-   cd ..
-   cd gateway
-   docker build -t gateway_service
-   ```
-   
-   <li>Now you need to run each image on a separate powershell window:</li>
-     
-   ```bash
-   docker run -it -p 5000:5000 catalog_service
-   ```
-   
-   ```bash
-   docker run -it -p 6000:6000 order_service
-   ```
-   
-   ```bash
-   docker run -it -p 5050:5050 gateway_service
-   ```
-
-   * Now you can send any request via the gateway and it will works well.
-      </ul>
    </li>
 </ol>
 
