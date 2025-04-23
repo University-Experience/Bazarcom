@@ -1,11 +1,7 @@
-from datetime import datetime
-from flask import Flask, jsonify, request, session
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
-from marshmallow import Schema, fields
-from sqlalchemy.orm import sessionmaker
+from flask import Flask, jsonify
+from flask_sqlalchemy import SQLAlchemy # like ORM
+from flask_marshmallow import Marshmallow # like Serializer
 import os
-
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -75,35 +71,33 @@ books_schema = BookSchema(many=True)
 magazine_schema = MagazineSchema()
 magazines_schema = MagazineSchema(many=True)
 
-# with app.app_context():
-#     db.drop_all()
-#     db.create_all()
-#     book1 = Book(title='How to get a good grade in DOS in 40 minutes a day', topic="distributed_systems", price=10.99, quantity=100)
-#     book2 = Book(title='RPCs for Noobs', topic="distributed_systems", price=15.00, quantity=50)
-#     book3 = Book(title='Xen and the Art of Surviving Undergraduate School', topic="undergraduate_school", price=5.00, quantity=30)
-#     book4 = Book(title='Cooking for the Impatient Undergrad', topic="undergraduate_school", price=10.00, quantity=70)
-#     db.session.add(book1)
-#     db.session.add(book2)
-#     db.session.add(book3)
-#     db.session.add(book4)
-#     db.session.commit()
-
-
-
 with app.app_context():
+    db.drop_all()
     db.create_all()
-    
-    mag1 = Magazine(title='National Geographic', price=5.99, quantity=50)
-    mag2 = Magazine(title='Time', price=4.99, quantity=30)
-    mag3 = Magazine(title='Vogue', price=6.99, quantity=20)
-    mag4 = Magazine(title='Forbes', price=7.99, quantity=15)
-    
-    db.session.add(mag1)
-    db.session.add(mag2)
-    db.session.add(mag3)
-    db.session.add(mag4)
+    book1 = Book(title='How to get a good grade in DOS in 40 minutes a day', topic="distributed_systems", price=10.99, quantity=100)
+    book2 = Book(title='RPCs for Noobs', topic="distributed_systems", price=15.00, quantity=50)
+    book3 = Book(title='Xen and the Art of Surviving Undergraduate School', topic="undergraduate_school", price=5.00, quantity=30)
+    book4 = Book(title='Cooking for the Impatient Undergrad', topic="undergraduate_school", price=10.00, quantity=70)
+    db.session.add(book1)
+    db.session.add(book2)
+    db.session.add(book3)
+    db.session.add(book4)
     db.session.commit()
 
+
+    # Check if magazines already exist
+    if Magazine.query.count() == 0:
+        mag1 = Magazine(title='National Geographic', price=5.99, quantity=50)
+        mag2 = Magazine(title='Time', price=4.99, quantity=30)
+        mag3 = Magazine(title='Vogue', price=6.99, quantity=20)
+        mag4 = Magazine(title='Forbes', price=7.99, quantity=15)
+        
+        db.session.add(mag1)
+        db.session.add(mag2)
+        db.session.add(mag3)
+        db.session.add(mag4)
+        db.session.commit()
+        
 
 @app.route('/catalog/', methods=['GET'])
 def get_books_test():
@@ -163,6 +157,4 @@ def get_book(book_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-    
+    app.run(host="0.0.0.0", port=5000)

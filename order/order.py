@@ -1,9 +1,7 @@
 from datetime import datetime
-from flask import Flask, jsonify, request, session
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from marshmallow import Schema, fields
-from sqlalchemy.orm import sessionmaker
 import requests
 import os
 
@@ -54,8 +52,7 @@ orders_schema = OrderSchema(many=True)
 
 @app.route('/order/purchase/<int:book_id>', methods=['POST'])
 def purchase(book_id):
-    print(book_id)
-    response = requests.post(f'http://127.0.0.1:5000/catalog/books/{book_id}/decrement')
+    response = requests.post(f'http://catalog_service:5000/catalog/books/{book_id}/decreament')
     if response.status_code == 200:
 
         order_date = datetime.now()
@@ -68,6 +65,5 @@ def purchase(book_id):
         return jsonify({"message" : "Error on order"}), 404
 
 
-
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=6000)
+    app.run(host='0.0.0.0', port=6000)

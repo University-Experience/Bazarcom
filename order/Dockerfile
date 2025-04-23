@@ -1,25 +1,15 @@
-FROM ubuntu:latest
+FROM ubuntu:22.04
 
-# set a directory for the app
 WORKDIR /app
-
-# copy all the files from the host folder to the container
 COPY . .
 
-# update apt-get repository 
-RUN apt-get update -y	
+RUN apt-get update -y
+RUN apt-get install python3.10 python3.10-venv python3.10-dev python3-pip python3-setuptools -y
 
-
-# install python3
-RUN apt-get install python3 -y
-
-# install pip3
-RUN apt-get install python3-pip -y
-
-COPY requirements.txt requirements.txt
+RUN python3.10 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 EXPOSE 6000
-
-# Run client.py when the container launches
 CMD ["python3", "./order.py"]
