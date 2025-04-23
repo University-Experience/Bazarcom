@@ -48,7 +48,7 @@ def get_book_by_catalog(topic):
 @app.route('/gateway/purchase/<int:book_id>', methods=['POST'])
 def purchase(book_id):
     response = requests.post(f'http://127.0.0.1:6000/order/purchase/{book_id}')
-    print(response.json()) 
+    print('Response:', response.json()) 
     if response.status_code == 200: 
         books = response.json()
         return jsonify(books), 200

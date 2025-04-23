@@ -40,14 +40,40 @@ class Book(db.Model):
         return f"<Book(title='{self.title}', price={self.price}, quantity={self.quantity}, topic='{self.topic}')>"
 
 
+class Magazine(db.Model):
+    __tablename__ = 'magazines'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String)
+    price = db.Column(db.Float)
+    quantity = db.Column(db.Integer)
+
+    def __init__(self, title, price, quantity):
+        self.title = title
+        self.price = price
+        self.quantity = quantity
+
+    def __repr__(self):
+        return f"<Magazine(title='{self.title}', price={self.price}, quantity={self.quantity})>"
+
+
 class BookSchema(ma.Schema):
     class Meta:
         model = Book
         fields = ('id', 'title', 'price', 'quantity', 'topic')
 
+
+class MagazineSchema(ma.Schema):
+    class Meta:
+        model = Magazine
+        fields = ('id', 'title', 'price', 'quantity')
+
+
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
 
+magazine_schema = MagazineSchema()
+magazines_schema = MagazineSchema(many=True)
 
 # with app.app_context():
 #     db.drop_all()
@@ -62,9 +88,25 @@ books_schema = BookSchema(many=True)
 #     db.session.add(book4)
 #     db.session.commit()
 
-@app.route('/catalog/', methods=['GET'])
-def get_bookss():
+
+
+with app.app_context():
+    db.create_all()
     
+    mag1 = Magazine(title='National Geographic', price=5.99, quantity=50)
+    mag2 = Magazine(title='Time', price=4.99, quantity=30)
+    mag3 = Magazine(title='Vogue', price=6.99, quantity=20)
+    mag4 = Magazine(title='Forbes', price=7.99, quantity=15)
+    
+    db.session.add(mag1)
+    db.session.add(mag2)
+    db.session.add(mag3)
+    db.session.add(mag4)
+    db.session.commit()
+
+
+@app.route('/catalog/', methods=['GET'])
+def get_books_test():
     return jsonify({"message" : "hello world"}), 200
     
 
@@ -75,6 +117,12 @@ def get_books():
     result = books_schema.dump(all_books)
     return jsonify(result), 200
     
+
+@app.route('/catalog/magazines', methods=['GET'])
+def get_magazines():
+    all_magazines = Magazine.query.all()
+    result = magazines_schema.dump(all_magazines)
+    return jsonify(result), 200
 
 @app.route('/catalog/books/<int:book_id>', methods=['GET'])
 def get_book_by_id(book_id):
@@ -100,7 +148,7 @@ def get_book_by_topic(topic):
 
 
 
-@app.route('/catalog/books/<int:book_id>/decreament', methods=['POST'])
+@app.route('/catalog/books/<int:book_id>/decrement', methods=['POST'])
 def get_book(book_id):
     book = Book.query.get_or_404(book_id)
     # Serialize the book object into a dictionary
@@ -111,7 +159,7 @@ def get_book(book_id):
 
     db.session.commit()
     # serialized_book = book_schema.dump(book)
-    return jsonify({"message": "Book decreamented successfully", "book_id": book.id, "total_price": book.price})
+    return jsonify({"message": "Book decremented successfully", "book_id": book.id, "total_price": book.price})
 
 
 if __name__ == '__main__':
